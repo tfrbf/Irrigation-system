@@ -1,51 +1,63 @@
-
-#include<ESP32Servo.h>
+#define BLYNK_PRINT Serial
+#include <ESP32Servo.h>
+#define sensor 13
+#define waterPump 14
+#include <BlynkSimpleEsp32.h>
 Servo s1;
-
+char auth[] = "RbxagPEwKJtNRMhK4cqAm0eSmzQZ5dgz";
+char ssid[] = "ebugs";
+char pass[] = "fuck you";
+BlynkTimer timer;
+bool Relay = 0;
 int soilmoisture1 = 0;
-
-int count=0;
-
-
-void setup()
-{
+int count = 0;
+void setup() {
   pinMode(13, INPUT);
- pinMode(12, OUTPUT);
+  pinMode(12, OUTPUT);
   pinMode(14, OUTPUT);
   s1.attach(12);
   Serial.begin(9600);
   digitalWrite(14, HIGH);
+  Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
+  timer.setInterval(100L, soilMoistureSensor);
 }
+  BLYNK_WRITE(V1) {
+    Relay = param.asInt();
 
-
-void loop()
-{
-  soilmoisture1 = analogRead(13);
- // soilmoisture2 = analogRead(A1);
- // soilmoisture3 = analogRead(A2);
-  Serial.print("Humidity: ");
-  Serial.println(soilmoisture1);
- // Serial.println(soilmoisture2);
- // Serial.println(soilmoisture3);
-  
-  if (soilmoisture1 >200) {
-
-    s1.write(0);
-    delay(1000);
-    s1.write(180);
-    delay(1000);
-    s1.write(0);
-    digitalWrite(14,LOW);
-    delay(650);
-    digitalWrite(14,HIGH);
-    delay(650);
-
-
-
-  } else {
-    digitalWrite(12, LOW);
+    if (Relay == 1) 
+    {
+      digitalWrite(waterPump, LOW);
+    } else {
+      digitalWrite(waterPump, HIGH);
+    }
   }
-  
-  
-  delay(10); // Delay a little bit to improve simulation performance
+
+//Get the soil moisture values
+void soilMoistureSensor() {
+  int value = analogRead(sensor);
+  value = map(value, 0, 1024, 0, 100);
+  value = (value - 100) * -1;
+
+  Blynk.virtualWrite(V0, value);
 }
+
+  void loop() {
+    soilmoisture1 = analogRead(13);
+    // soilmoisture2 = analogRead(A1);
+    // soilmoisture3 = analogRead(A2);
+    Serial.print("Humidity: ");
+    Serial.println(soilmoisture1);
+    // Serial.println(soilmoisture2);
+    // Serial.println(soilmoisture3);
+      Blynk.run();  //Run the Blynk library
+      timer.run();  //Run the Blynk timer
+
+
+
+    } else {
+      digitalWrite(12, LOW);
+    }
+
+
+    delay(10);  // Delay a little bit to improve simulation performance
+  }
