@@ -15,6 +15,14 @@ To install and set up this system, please follow the instructions below:
 
 After installation and setup, the system is ready to work.By placing the plants around the water pump and connecting the humidity sensor to each plant, the system will start automatically. If the humidity percentage of the pot is less than the allowed limit, the pump will automatically move to the corresponding pot and inject water for it.
 
+## Components
+- ESP-wroom32 Devkit v1
+- Servo motor 9g
+- Funduino Soil moisture sensor 
+- Air and water pump motor 12 volt DC
+
+
+
 ## Developers
 
 - Sepinoud Marhamati
