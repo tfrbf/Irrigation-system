@@ -17,6 +17,7 @@ void setup() {
   pinMode(12, OUTPUT);  // Servo
   s1.attach(12);
   pinMode(14, OUTPUT);     //Pump
+  //pinMode(uint8_t pin, OUTPUT);
   //pinMode(uint8_t pin, OUTPUT); 
   digitalWrite(14, HIGH);  //Set pump in off mode
 }
@@ -26,6 +27,12 @@ void loop() {
   soilmoisture1 = analogRead(13);
   //soilmoisture2 = analogRead();
   //soilmoisture3 = analogRead();
+
+  //digitalWrite(uint8_t pin, HIGH);
+  delay(250);
+ // digitalWrite(uint8_t pin, LOW);
+  delay(50);
+  
   Serial.print("Humidity: ");
   Serial.print(soilmoisture1);
   //Serial.println(soilmoisture2);
@@ -55,12 +62,14 @@ void loop() {
 
   // } else digitalWrite(12, LOW);
 
-  delay(10);  // Delay a little bit to improve simulation performance
+  delay(5000);  // Delay a little bit to improve simulation performance
 }
 
 void pump_activate()
 {
   digitalWrite(14, LOW);
+  //digitalWrite(uint8_t pin, HIGH);
   delay(pump_time * 1000);
+  //digitalWrite(uint8_t pin, LOW);
   digitalWrite(14, HIGH);
 }
