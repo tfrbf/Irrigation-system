@@ -1,13 +1,27 @@
-#include <ESP32Servo.h>
+#include <Servo.h>
+#include <Keypad.h>
 
-#define sensor1 12
-#define sensor2 13
-#define sensor3 14
-#define servo 5
+#define sensor1 A0
+#define sensor2 A1
+#define sensor3 A2
+#define servo 3
 #define pump 4
-#define LED 2
+#define LED 5
 
 Servo s1;  //initialize servo motor
+
+const byte rows = 4;
+const byte clos = 3;
+char keys [rows][clos] = {
+  '1','2','3',
+  '4','5','6',
+  '7','8','9',
+  '*','0','#'
+};
+
+byte rowPins[rows] = {6,7,8,9};
+byte colPins[clos] = {10,11,12};
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, rows, clos );
 
 unsigned int sensor_value1 = 0;
 unsigned int sensor_value2 = 0;
@@ -27,10 +41,16 @@ void setup() {
   pinMode(servo, OUTPUT);  // Servo
   s1.attach(servo);
 
-  digitalWrite(pump, HIGH);  //Set pump in off mode
+  digitalWrite(pump, LOW);  //Set pump in off mode
 }
 
 void loop() {
+  char key = keypad.getKey();// خواندن کلید
+  // بررسی میکنیم آیا کلیدی فشرده است؟
+  if (key){
+    Serial.print("Key Pressed : ");
+    Serial.println(key);
+  }
   // Getting sensors data
   sensor_value1 = analogRead(sensor1);
   sensor_value2 = analogRead(sensor2);
@@ -48,7 +68,7 @@ void loop() {
   Serial.print(sensor_value3);
   Serial.print("\n");
 
-  if (sensor_value1 > 300) {
+  if ((sensor_value1 > 300) || (key == '1')) {
     s1.write(0);
     s1.write(180);
     pump_activate();
@@ -56,7 +76,7 @@ void loop() {
 
   } else digitalWrite(sensor1, LOW);
 
-  if (sensor_value2 > 300) {
+  if ((sensor_value1 > 300) || (key == '2')) {
     s1.write(0);
     s1.write(90);
     pump_activate();
@@ -64,7 +84,7 @@ void loop() {
 
   } else digitalWrite(sensor2, LOW);
 
-  if (sensor_value3 > 300) {
+  if ((sensor_value1 > 300) || (key == '3')) {
     s1.write(0);
     s1.write(0);
     pump_activate();
@@ -72,7 +92,7 @@ void loop() {
 
   } else digitalWrite(sensor3, LOW);
 
-  delay(500);  // Delay a little bit to improve simulation performance
+  delay(1000);  // Delay a little bit to improve simulation performance
 }
 
 void pump_activate() {
