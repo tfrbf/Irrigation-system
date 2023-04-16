@@ -1,75 +1,85 @@
 #include <ESP32Servo.h>
-Servo s1;
 
-unsigned int soilmoisture1 = 0;
-//unsigned int soilmoisture1 = 0;
-//unsigned int soilmoisture1 = 0;
+#define sensor1 12
+#define sensor2 13
+#define sensor3 14
+#define servo 5
+#define pump 4
+#define LED 2
+
+Servo s1;  //initialize servo motor
+
+unsigned int sensor_value1 = 0;
+unsigned int sensor_value2 = 0;
+unsigned int sensor_value3 = 0;
 
 // Set how much pump should be active in seconde
-byte pump_time = 2;
+const byte pump_time = 2;
 
 
 void setup() {
   Serial.begin(9600);
-  pinMode(13, INPUT);  //Soilmoisture 1
-  //pinMode( , INPUT); //Soilmoisture 2
-  //pinMode( , INPUT); //Soilmoisture 3
-  pinMode(12, OUTPUT);  // Servo
-  s1.attach(12);
-  pinMode(14, OUTPUT);     //Pump
-  //pinMode(uint8_t pin, OUTPUT);
-  //pinMode(uint8_t pin, OUTPUT); 
-  digitalWrite(14, HIGH);  //Set pump in off mode
+  pinMode(sensor1, INPUT);  //Soilmoisture 1
+  pinMode(sensor2, INPUT);  //Soilmoisture 2
+  pinMode(sensor3, INPUT);  //Soilmoisture 3
+  pinMode(pump, OUTPUT);    //Pump
+  pinMode(LED, OUTPUT);
+  pinMode(servo, OUTPUT);  // Servo
+  s1.attach(servo);
+
+  digitalWrite(pump, HIGH);  //Set pump in off mode
 }
 
 void loop() {
   // Getting sensors data
-  soilmoisture1 = analogRead(13);
-  //soilmoisture2 = analogRead();
-  //soilmoisture3 = analogRead();
+  sensor_value1 = analogRead(sensor1);
+  sensor_value2 = analogRead(sensor2);
+  sensor_value3 = analogRead(sensor3);
 
-  //digitalWrite(uint8_t pin, HIGH);
-  delay(250);
- // digitalWrite(uint8_t pin, LOW);
-  delay(50);
-  
-  Serial.print("Humidity: ");
-  Serial.print(soilmoisture1);
-  //Serial.println(soilmoisture2);
-  //Serial.println(soilmoisture3);
+  delay(10);
 
-  if (soilmoisture1 > 200) {
+  Serial.print("Sensor1: ");
+  Serial.print(sensor_value1);
+  Serial.print("\t");
+  Serial.print("Sensor2: ");
+  Serial.print(sensor_value2);
+  Serial.print("\t");
+  Serial.print("Sensor3: ");
+  Serial.print(sensor_value3);
+  Serial.print("\n");
+
+  if (sensor_value1 > 300) {
     s1.write(0);
     s1.write(180);
     pump_activate();
     s1.write(0);
 
-  } else digitalWrite(12, LOW);
+  } else digitalWrite(sensor1, LOW);
 
-  // if (soilmoisture2 > 200) {
-  //   s1.write(0);
-  //   s1.write(90);
-  //   pump_activate();
-  //   s1.write(0);
+  if (sensor_value2 > 300) {
+    s1.write(0);
+    s1.write(90);
+    pump_activate();
+    s1.write(0);
 
-  // } else digitalWrite(12, LOW);
+  } else digitalWrite(sensor2, LOW);
 
-  // if (soilmoisture3 > 200) {
-  //   s1.write(0);
-  //   s1.write(0);
-  //   pump_activate();
-  //   s1.write(0);
+  if (sensor_value3 > 300) {
+    s1.write(0);
+    s1.write(0);
+    pump_activate();
+    s1.write(0);
 
-  // } else digitalWrite(12, LOW);
+  } else digitalWrite(sensor3, LOW);
 
-  delay(5000);  // Delay a little bit to improve simulation performance
+  delay(500);  // Delay a little bit to improve simulation performance
 }
 
-void pump_activate()
-{
-  digitalWrite(14, LOW);
-  //digitalWrite(uint8_t pin, HIGH);
+void pump_activate() {
+  
+  digitalWrite(LED, HIGH);
+  digitalWrite(pump, HIGH);
   delay(pump_time * 1000);
-  //digitalWrite(uint8_t pin, LOW);
-  digitalWrite(14, HIGH);
+  digitalWrite(LED, LOW);
+  digitalWrite(pump, LOW);
 }
