@@ -42,16 +42,18 @@ void setup() {
   pinMode(sensor2, INPUT);  //Soilmoisture 2
   pinMode(sensor3, INPUT);  //Soilmoisture 3
   pinMode(pump, OUTPUT);    //Pump
+  digitalWrite(pump, HIGH); // set pump off mode
   pinMode(LED, OUTPUT);
   pinMode(servo, OUTPUT);  // Servo
   s1.attach(servo);
+    
+
 
   digitalWrite(pump, LOW);  //Set pump in off mode
 }
 
 void loop() {
-  char key = keypad.getKey();// خواندن کلید
-  // بررسی میکنیم آیا کلیدی فشرده است؟
+  char key = keypad.getKey();
   if (key){
     Serial.print("Key Pressed : ");
     Serial.println(key);
@@ -111,8 +113,8 @@ void loop() {
 void pump_activate() {
   
   digitalWrite(LED, HIGH);
-  digitalWrite(pump, HIGH);
+  digitalWrite(pump, LOW);
   delay(pump_time * 1000);
   digitalWrite(LED, LOW);
-  digitalWrite(pump, LOW);
+  digitalWrite(pump, HIGH);
 }
