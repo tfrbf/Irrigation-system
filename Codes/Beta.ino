@@ -9,22 +9,22 @@
 #define LED 5
 #define mq5 A3
 #define ldr A4
- 
+
 
 Servo s1;  //initialize servo motor
 
 const byte rows = 4;
 const byte clos = 3;
-char keys [rows][clos] = {
-  '1','2','3',
-  '4','5','6',
-  '7','8','9',
-  '*','0','#'
+char keys[rows][clos] = {
+  '1', '2', '3',
+  '4', '5', '6',
+  '7', '8', '9',
+  '*', '0', '#'
 };
 
-byte rowPins[rows] = {7,8,9,10};
-byte colPins[clos] = {11,12,13};
-Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, rows, clos );
+byte rowPins[rows] = { 7, 8, 9, 10 };
+byte colPins[clos] = { 11, 12, 13 };
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, rows, clos);
 
 unsigned int sensor_value1 = 0;
 unsigned int sensor_value2 = 0;
@@ -42,19 +42,16 @@ void setup() {
   pinMode(sensor2, INPUT);  //Soilmoisture 2
   pinMode(sensor3, INPUT);  //Soilmoisture 3
   pinMode(pump, OUTPUT);    //Pump
-  digitalWrite(pump, HIGH); // set pump off mode
   pinMode(LED, OUTPUT);
   pinMode(servo, OUTPUT);  // Servo
   s1.attach(servo);
-    
-
-
-  digitalWrite(pump, LOW);  //Set pump in off mode
+  digitalWrite(pump, HIGH);
 }
 
 void loop() {
-  char key = keypad.getKey();
-  if (key){
+  char key = keypad.getKey();  // خواندن کلید
+  // بررسی میکنیم آیا کلیدی فشرده است؟
+  if (key) {
     Serial.print("Key Pressed : ");
     Serial.println(key);
   }
@@ -111,7 +108,7 @@ void loop() {
 }
 
 void pump_activate() {
-  
+
   digitalWrite(LED, HIGH);
   digitalWrite(pump, LOW);
   delay(pump_time * 1000);
