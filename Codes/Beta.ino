@@ -11,8 +11,6 @@
 #define pump 4
 
 
-
-
 Servo s1;  //initialize servo motor
 
 const byte rows = 4;
