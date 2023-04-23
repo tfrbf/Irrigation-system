@@ -4,11 +4,13 @@
 #define sensor1 A0
 #define sensor2 A1
 #define sensor3 A2
-#define servo 3
-#define pump 4
-#define LED 5
 #define mq5 A3
 #define ldr A4
+#define temp A5
+#define servo 3
+#define pump 4
+
+
 
 
 Servo s1;  //initialize servo motor
@@ -31,9 +33,10 @@ unsigned int sensor_value2 = 0;
 unsigned int sensor_value3 = 0;
 unsigned int mq5_value = 0;
 unsigned int ldr_value;
+int temp_value = 0;
 
 // Set how much pump should be active in seconde
-const byte pump_time = 2;
+const byte pump_time = 3;
 
 
 void setup() {
@@ -42,15 +45,14 @@ void setup() {
   pinMode(sensor2, INPUT);  //Soilmoisture 2
   pinMode(sensor3, INPUT);  //Soilmoisture 3
   pinMode(pump, OUTPUT);    //Pump
-  pinMode(LED, OUTPUT);
   pinMode(servo, OUTPUT);  // Servo
   s1.attach(servo);
-  digitalWrite(pump, HIGH);
+  digitalWrite(pump, LOW);
 }
 
 void loop() {
-  char key = keypad.getKey();  // خواندن کلید
-  // بررسی میکنیم آیا کلیدی فشرده است؟
+  char key = keypad.getKey(); 
+  
   if (key) {
     Serial.print("Key Pressed : ");
     Serial.println(key);
@@ -61,9 +63,11 @@ void loop() {
   sensor_value3 = analogRead(sensor3);
   mq5_value = analogRead(mq5);
   ldr_value = analogRead(ldr);
+  temp_value = analogRead(temp);
 
   delay(10);
 
+  // Printing Values
   Serial.print("Sensor1: ");
   Serial.print(sensor_value1);
   Serial.print("\t");
@@ -78,29 +82,35 @@ void loop() {
   Serial.print("\t");
   Serial.print("Light: ");
   Serial.print(ldr_value);
+  Serial.print("\t");
+  Serial.print("temp: ");
+  Serial.print(temp_value);
   Serial.print("\n");
 
   if ((sensor_value1 > 300) || (key == '1')) {
     s1.write(0);
     s1.write(180);
+    delay(500);
     pump_activate();
-    s1.write(0);
+    //s1.write(0);
 
   } else digitalWrite(sensor1, LOW);
 
   if ((sensor_value2 > 300) || (key == '2')) {
     s1.write(0);
     s1.write(90);
+    delay(500);
     pump_activate();
-    s1.write(0);
+    //s1.write(0);
 
   } else digitalWrite(sensor2, LOW);
 
   if ((sensor_value3 > 300) || (key == '3')) {
     s1.write(0);
     s1.write(0);
+    delay(500);
     pump_activate();
-    s1.write(0);
+    //s1.write(0);
 
   } else digitalWrite(sensor3, LOW);
 
@@ -109,9 +119,7 @@ void loop() {
 
 void pump_activate() {
 
-  digitalWrite(LED, HIGH);
-  digitalWrite(pump, LOW);
-  delay(pump_time * 1000);
-  digitalWrite(LED, LOW);
   digitalWrite(pump, HIGH);
+  delay(pump_time * 1000);
+  digitalWrite(pump, LOW);
 }
