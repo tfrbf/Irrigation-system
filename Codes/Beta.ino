@@ -47,7 +47,7 @@ void setup() {
   pinMode(pump, OUTPUT);    //Pump
   pinMode(servo, OUTPUT);  // Servo
   s1.attach(servo);
-  digitalWrite(pump, LOW);
+  digitalWrite(pump, HIGH);
 }
 
 void loop() {
@@ -119,7 +119,7 @@ void loop() {
 
 void pump_activate() {
 
-  digitalWrite(pump, HIGH);
-  delay(pump_time * 1000);
   digitalWrite(pump, LOW);
+  delay(pump_time * 1000);
+  digitalWrite(pump, HIGH);
 }
