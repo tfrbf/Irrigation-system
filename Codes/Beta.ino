@@ -9,6 +9,7 @@
 #define temp A5
 #define servo 3
 #define pump 4
+#define buzzer 2
 char blth;
 String voice;
 
@@ -46,7 +47,8 @@ void setup() {
   pinMode(sensor2, INPUT);  //Soilmoisture 2
   pinMode(sensor3, INPUT);  //Soilmoisture 3
   pinMode(pump, OUTPUT);    //Pump
-  pinMode(servo, OUTPUT);  // Servo
+  pinMode(servo, OUTPUT);   // Servo
+  pinMode(buzzer, OUTPUT);
   s1.attach(servo);
   digitalWrite(pump, HIGH);
   if (Serial.available() > 0)
@@ -54,13 +56,13 @@ void setup() {
 }
 
 void loop() {
-  char key = keypad.getKey(); 
-  
-  
+  char key = keypad.getKey();
+
   if (key) {
     Serial.print("Key Pressed : ");
     Serial.println(key);
   }
+
   // Getting sensors data
   sensor_value1 = analogRead(sensor1);
   sensor_value2 = analogRead(sensor2);
@@ -82,7 +84,7 @@ void loop() {
   Serial.print(sensor_value3);
   Serial.print("\t");
   Serial.print("MQ5: ");
-  Serial.print(mq5);
+  Serial.print(mq5_value);
   Serial.print("\t");
   Serial.print("Light: ");
   Serial.print(ldr_value);
@@ -91,33 +93,33 @@ void loop() {
   Serial.print(temp_value);
   Serial.print("\n");
 
-  led_value = map(ldr_value, 0,1024,0, 100);
-  analogWrite(5, 100-led_value);
 
-  if ((sensor_value1 > 300) || (key == '1') || (voice == "left")) {
-    s1.write(0);
-    s1.write(180);
+  //LED   
+  led_value = map(ldr_value, 0, 1024, 0, 100); 
     delay(500);
     pump_activate();
     s1.write(0);
+    voice = "";
 
   } else digitalWrite(sensor1, LOW);
 
-  if ((sensor_value2 > 300) || (key == '5') || (voice == "right")) {
+  if ((sensor_value2 > 300) || (key == '5') || (voice == "left") || (voice == "lift") || (voice == "5")) {
     s1.write(0);
     s1.write(90);
     delay(500);
     pump_activate();
     s1.write(0);
+    voice = "";
 
   } else digitalWrite(sensor2, LOW);
 
-  if ((sensor_value3 > 300) || (key == '3') || (voice == "forward")) {
+  if ((sensor_value3 > 300) || (key == '3') || (voice == "up") || voice == "3") {
     s1.write(0);
     s1.write(0);
     delay(500);
     pump_activate();
     s1.write(0);
+    voice = "";
 
   } else digitalWrite(sensor3, LOW);
 
@@ -129,9 +131,6 @@ void loop() {
     delay(2);
     Serial.println(voice);
   }
-
-  
-
 }
 
 void pump_activate() {
@@ -139,5 +138,4 @@ void pump_activate() {
   digitalWrite(pump, LOW);
   delay(pump_time * 1000);
   digitalWrite(pump, HIGH);
-
 }
