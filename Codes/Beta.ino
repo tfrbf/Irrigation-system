@@ -9,6 +9,8 @@
 #define temp A5
 #define servo 3
 #define pump 4
+char blth;
+String voice;
 
 
 Servo s1;  //initialize servo motor
@@ -47,6 +49,8 @@ void setup() {
   pinMode(servo, OUTPUT);  // Servo
   s1.attach(servo);
   digitalWrite(pump, HIGH);
+  if (Serial.available() > 0)
+    Serial.print("\tBluetooth Connected Seccessfully.\a");
 }
 
 void loop() {
@@ -87,10 +91,10 @@ void loop() {
   Serial.print(temp_value);
   Serial.print("\n");
 
-  led_value = map(ldr_value, 0,1024,0, 255);
-  analogWrite(5, 255-led_value);
+  led_value = map(ldr_value, 0,1024,0, 100);
+  analogWrite(5, 100-led_value);
 
-  if ((sensor_value1 > 300) || (key == '1')) {
+  if ((sensor_value1 > 300) || (key == '1') || (voice == "left")) {
     s1.write(0);
     s1.write(180);
     delay(500);
@@ -99,7 +103,7 @@ void loop() {
 
   } else digitalWrite(sensor1, LOW);
 
-  if ((sensor_value2 > 300) || (key == '5')) {
+  if ((sensor_value2 > 300) || (key == '5') || (voice == "right")) {
     s1.write(0);
     s1.write(90);
     delay(500);
@@ -108,7 +112,7 @@ void loop() {
 
   } else digitalWrite(sensor2, LOW);
 
-  if ((sensor_value3 > 300) || (key == '3')) {
+  if ((sensor_value3 > 300) || (key == '3') || (voice == "forward")) {
     s1.write(0);
     s1.write(0);
     delay(500);
@@ -117,7 +121,17 @@ void loop() {
 
   } else digitalWrite(sensor3, LOW);
 
-  delay(1000);  // Delay a little bit to improve simulation performance
+  delay(1000);
+  if (Serial.available() > 0) {
+    voice = "";
+    delay(2);
+    voice = Serial.readString();
+    delay(2);
+    Serial.println(voice);
+  }
+
+  
+
 }
 
 void pump_activate() {
@@ -125,4 +139,5 @@ void pump_activate() {
   digitalWrite(pump, LOW);
   delay(pump_time * 1000);
   digitalWrite(pump, HIGH);
+
 }
