@@ -31,6 +31,7 @@ unsigned int sensor_value2 = 0;
 unsigned int sensor_value3 = 0;
 unsigned int mq5_value = 0;
 unsigned int ldr_value;
+unsigned int led_value = 0;
 int temp_value = 0;
 
 // Set how much pump should be active in seconde
@@ -50,6 +51,7 @@ void setup() {
 
 void loop() {
   char key = keypad.getKey(); 
+  
   
   if (key) {
     Serial.print("Key Pressed : ");
@@ -84,6 +86,9 @@ void loop() {
   Serial.print("temp: ");
   Serial.print(temp_value);
   Serial.print("\n");
+
+  led_value = map(ldr_value, 0,1024,0, 255);
+  analogWrite(5, 255-led_value);
 
   if ((sensor_value1 > 300) || (key == '1')) {
     s1.write(0);
