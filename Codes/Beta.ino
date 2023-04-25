@@ -90,16 +90,16 @@ void loop() {
     s1.write(180);
     delay(500);
     pump_activate();
-    //s1.write(0);
+    s1.write(0);
 
   } else digitalWrite(sensor1, LOW);
 
-  if ((sensor_value2 > 300) || (key == '2')) {
+  if ((sensor_value2 > 300) || (key == '5')) {
     s1.write(0);
     s1.write(90);
     delay(500);
     pump_activate();
-    //s1.write(0);
+    s1.write(0);
 
   } else digitalWrite(sensor2, LOW);
 
@@ -108,7 +108,7 @@ void loop() {
     s1.write(0);
     delay(500);
     pump_activate();
-    //s1.write(0);
+    s1.write(0);
 
   } else digitalWrite(sensor3, LOW);
 
