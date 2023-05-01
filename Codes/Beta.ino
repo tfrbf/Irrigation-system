@@ -101,7 +101,14 @@ void loop() {
     s1.write(0);
     voice = "";
 
-  } else digitalWrite(sensor1, LOW);
+    if ((sensor_value1 > 300) || (key == '1') || (voice == "right") || (voice == "1")) {
+    s1.write(0);
+    s1.write(90);
+    delay(500);
+    pump_activate();
+    s1.write(0);
+    voice = "";
+    } else digitalWrite(sensor1, LOW);
 
   if ((sensor_value2 > 300) || (key == '5') || (voice == "left") || (voice == "lift") || (voice == "5")) {
     s1.write(0);
