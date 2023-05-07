@@ -34,14 +34,14 @@ Servo s1;
 
 // Keyboard
 const byte rows = 2;
-const byte clos = 3;
-char keys[rows][clos] = {
+const byte cols = 3;
+char keys[rows][cols] = {
   '1', '2', '3',
   '4', '5', '6'
 };
 byte rowPins[rows] = { 9, 7 };
-byte colPins[clos] = { 8, 12, 13 };
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, rows, clos);
+byte colPins[cols] = { 8, 12, 13 };
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, rows, cols);
 // End keyboard
 
 void setup() {
