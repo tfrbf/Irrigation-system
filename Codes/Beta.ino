@@ -45,7 +45,7 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, rows, cols);
 // End keyboard
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println(__FILE__);
   SRF.setCorrectionFactor(1.035);
   pinMode(soil1, INPUT);  //Soilmoisture 1
@@ -60,7 +60,7 @@ void setup() {
 
 void loop() {
   key = keypad.getKey();
-
+voice = Serial.readString();
   // Getting sensors data
   soil_value1 = analogRead(soil1);
   soil_value2 = analogRead(soil2);
@@ -72,6 +72,9 @@ void loop() {
   // Printing Values
   Serial.print("Key: ");
   Serial.print(key);
+  Serial.print("\t");
+  Serial.print("voice: ");
+  Serial.print(voice);
   Serial.print("\t");
   Serial.print("distance: ");
   Serial.print(dis);
@@ -123,14 +126,7 @@ void loop() {
     voice = "";
 
   } else digitalWrite(soil3, LOW);
-
-  if (Serial.available() > 0) {
-    voice = "";
-    delay(2);
-    voice = Serial.readString();
-    delay(2);
-    Serial.println(voice);
-  }
+  
 }
 
 void pump_activate() {
